@@ -27,5 +27,6 @@ The host machine will only need to be running Docker.
 ![image](https://github.com/user-attachments/assets/676221c4-0f93-42b8-b539-596282f8d510)
 
 # Building a UBKGBox instance
-_pending_
+## ubkg-front-end image
+The **ubkg-front-end** image is published to the Docker Hub repository named **hubmap/ubkg-front-end**. Instructions for building and pushing the image are in the ubkg-api repo (_link after branch merge_).
 
