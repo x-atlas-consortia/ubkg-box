@@ -3,8 +3,22 @@ name: ubkgbox
 
 services:
 
-  # ubkg-api hosts the UBKG-API.
+  # ubkg-front-end is a standalone UI with a landing page.
+  ubkg-front-end:
+    dockerfile: ./ubkg-front-end/Dockerfile
+    image: nginx
+    ports:
+      - "9000:8080"
+    volumes:
+      - .ubkg-front-end/nginx:/etc/nginx/conf.d
+      - ./ubkg-front-end:/var/www/front-end
 
+    # Wait until the neo4j server in the back end service is running.
+    depends_on:
+      ubkg-back-end:
+        condition: service_healthy
+
+  # ubkg-api hosts the UBKG-API.
   ubkg-api:
     # Use the published image and tag from Docker Hub
     image: hubmap/ubkg-api:latest
