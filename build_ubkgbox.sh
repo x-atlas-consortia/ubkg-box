@@ -82,5 +82,5 @@ export NEO4J_PASSWORD="$neo4j_password"
 export UI_PORT="$ui_port"
 export BOLT_PORT="$bolt_port"
 
-# Call Docker compose
-docker compose up
+# Call Docker compose for ubkgbox.
+docker compose -f ubkgbox-docker-compose.yml -p ubkgbox up

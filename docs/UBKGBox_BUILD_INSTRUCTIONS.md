@@ -38,12 +38,12 @@ The **container.cfg** file is used in both the workflow to generate the turkey D
 Copy **build_ubkgbpx.sh** to the directory used to build the turnkey Docker distribution.
 Set permissions on the file with the command `chmod +x build_ubkgbox.sh`.
 
-### docker-compose.yml
-The **docker-compose.yml** file in the _/docker_ directory is used to 
+### ubkgbox-docker-compose.yml
+The **ubkgbox-docker-compose.yml** file is used to 
 generate the **UBKGBox** multi-container application.
 
 ### ubkg-api instance's app.cfg file
-The **ubkg-front-end** container hosts an instance of the ubkg-api which
+The **ubkg-api** container hosts an instance of the ubkg-api which
 is configured by an **app.cfg** file. The **app.cfg** file can be created from the **app.cfg.example** file 
 in the ubkg-api's [src](https://github.com/x-atlas-consortia/ubkg-api/tree/main/src/ubkg_api/instance) directory.
 
@@ -80,25 +80,25 @@ The format for SERVER depends on the application environment for the neo4j insta
 
 1. Open a Terminal window. 
 2. Navigate to the build directory. 
-3. Build a turnkey Docker distribution of ubkg-neo4j, as described [here](https://github.com/x-atlas-consortia/ubkg-neo4j/blob/main/docs/BUILD_INSTRUCTIONS.md). 
-4. Execute `./build_ubkgbox.sh up`. The script will:
+3. Build a turnkey Docker distribution of ubkg-neo4j, as described [here](https://github.com/x-atlas-consortia/ubkg-neo4j/blob/main/docs/BUILD_INSTRUCTIONS.md).
+4. From the **[ubkg-front-end](https://github.com/x-atlas-consortia/ubkg-front-end)** repository, execute `build_ubkg-front-end build` and `build_ubkg-front-end push` to publish images of **ubkg-front-end** in Docker Hub in multiple architectures.
+5. From the **[ubkg-api](https://github.com/x-atlas-consortia/ubkg-api)** repository, execute `docker-development.sh build` and `docker-development.sh push` to publish images of **ubkg-api** in Docker Hub in multiple architectures.
+6. Execute `./build_ubkgbox.sh up`. The script will:
    - validate and obtain information from _container.cfg_.
    - copy **app.cfg** from the _cfg_ folder to a folder named _app_instance_.
-   - execute Docker Compose 
-5. Docker Compose will build a container application named **ubkg_box*, with service-containers named
-- **ubkg-api-1**
-- **ubkg-back-end-1**
+   - execute Docker Compose
 
-Docker Compose will display messages to the Terminal window as it executes, showing status messages from Docker containers named **ubkg-back-end-1** and **ubkg-api-1**.
+Docker Compose will display messages to the Terminal window as it executes, showing status messages from the Docker containers.
 The messages from **ubkg-back-end-1** will be identical to those displayed during the build of the turnkey Docker distribution.
 ![img_1.png](img_1.png)
 
 The Container view of Docker Desktop will show:
 - a container named _ubkgbox_
-- subcontainers named _
+- subcontainers named
+  - _ubkgbox-front-end-1_ 
   - _ubkgbox-back-end-1_
   - _ubkgbox-api-1_
 
 Container ports will have the following links:
-- ubkg-api-1:8080 - to the root page of the ubkg-api instance running in **ubkg-api-1**
-- ubkg-back-end-1:7474 - to the neo4j browser page for the neo4j instance running in **ubkg-back-end-1**
+- ubkg-api-1:7000/8080 - to the root page of the ubkg-api instance running in **ubkg-api-1**
+- ubkg-back-end-1:4500/7474 - to the neo4j browser page for the neo4j instance running in **ubkg-back-end-1**
