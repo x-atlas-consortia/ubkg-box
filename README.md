@@ -10,6 +10,7 @@ This repository describes **UBKGBox**: a self-contained, networked, multi-contai
    - an instance of [Guesdt](https://github.com/x-atlas-consortia/Guesdt), a Web UI that represents the UBKG in tree view
    - the neo4j browser
 - a front-end UI with networked links to client components, built from the [ubkg-front-end](https://github.com/x-atlas-consortia/ubkg-front-end) architecture
+- a [ubkg-auth](https://github.com/x-atlas-consortia/ubkg-auth) authentication service that authenticates UBKG consumers against the UMLS API by means of an API key
 
 - **UBKGBox** consolidates components with source from different GitHub repositories. Although the component repositories will provide some documentation regarding
 integration into **UBKGBox**, this repository serves as the central documentation source.
@@ -24,10 +25,11 @@ _Additional instructions pending_
 
 The host machine will only need to be running Docker.
 
-![img.png](img.png)
+![img_1.png](img_1.png)
 
 # Building a UBKGBox instance
 ## ubkg-front-end image and container
 ## ubkg-api image and container
 ## ubkg-swagger image and container
 ## ubkg-docs container
+## ubkg-auth container

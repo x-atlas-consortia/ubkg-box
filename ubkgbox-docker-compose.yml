@@ -9,10 +9,16 @@ services:
     ports:
       - "9000:8080"
 
-    # Wait until the neo4j server in the back end service is running.
+    # Wait until the neo4j server in ubkg-back-end is running.
     depends_on:
       ubkg-back-end:
         condition: service_healthy
+
+    init: true
+    restart: always
+
+    volumes:
+      - "./log:/usr/src/app/log"
 
   # ubkg-api hosts the UBKG-API.
   ubkg-api:
@@ -41,7 +47,7 @@ services:
 
     mem_limit: 2g # Limit to 2GB of RAM
 
-    # Wait until the neo4j server in the back end service is running.
+    # Wait until the neo4j server ubkg-back-end is running.
     depends_on:
       ubkg-back-end:
         condition: service_healthy
