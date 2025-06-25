@@ -5,9 +5,10 @@ services:
 
   # ubkg-front-end is a standalone UI with a landing page.
   ubkg-front-end:
+    container_name: front-end
     image: hubmap/ubkg-front-end:latest
     ports:
-      - "9000:8080"
+      - "7100:8080"
 
     # Wait until the neo4j server in ubkg-back-end is running.
     depends_on:
@@ -20,10 +21,53 @@ services:
     volumes:
       - "./log:/usr/src/app/log"
 
+    environment:
+      # neo4j browser port for the ubkg-back-end service.
+      - UI_PORT
+      # UID and GID 1001 to match the ubkg user by default.
+      # These environment variables will be passed to the Dockerfile and used to configure the non-root
+      # user under which nginx will run.
+      - HOST_GID=${HOST_GID:-1002}
+      - HOST_UID=${HOST_UID:-1002}
+
+    mem_limit: 2g # Limit to 2GB of RAM
+
+  # ubkg-auth hosts the ubkg-auth UMLS authorization service.
+
+  ubkg-auth:
+    image: hubmap/ubkg-auth:latest
+    container_name: auth
+    ports:
+      - "7200:8080"
+
+    # Wait until the neo4j server in ubkg-back-end is running.
+    depends_on:
+      ubkg-back-end:
+        condition: service_healthy
+
+    init: true
+    restart: always
+
+    volumes:
+      # Mount the ubkg-auth's app config (in the instance subdirectory of the build directory) to container in order to keep it outside the image.
+      - "./log:/usr/src/app/log"
+      - "./api_cfg:/usr/src/app/src/ubkg_api/instance"
+
+    environment:
+      # UID and GID 1001 to match the ubkg user by default.
+      # These environment variables will be passed to the Dockerfile and used to configure the non-root
+      # user under which nginx will run.
+      - HOST_GID=${HOST_GID:-1003}
+      - HOST_UID=${HOST_UID:-1003}
+
+    mem_limit: 2g # Limit to 2GB of RAM
+
+
   # ubkg-api hosts the UBKG-API.
   ubkg-api:
     # Use the published image and tag from Docker Hub
     image: hubmap/ubkg-api:latest
+    container_name: api
 
     # Map host machine port 7000 to container port 8080
     # Only root can listen on ports below 1024, we use higher-numbered ports
@@ -33,8 +77,8 @@ services:
     ports:
       - "7000:8080"
     volumes:
-      # Mount the ubkg-api's app config (in the instance subdirectory of the build directory) to container in order to keep it outside of the image.
-      - "./api_instance:/usr/src/app/src/ubkg_api/instance"
+      # Mount the ubkg-api's app config (in the instance subdirectory of the build directory) to container in order to keep it outside the image.
+      - "./api_cfg:/usr/src/app/src/ubkg_api/instance"
       # Mount the nginx log to container
       - "./log:/usr/src/app/log"
 
@@ -52,10 +96,11 @@ services:
       ubkg-back-end:
         condition: service_healthy
 
-  # ubkg-back-end will be based on a local turnkey distribution of a Docker container. 
+  # ubkg-back-end will be based on a local turnkey distribution of a Docker neo4j container. 
   ubkg-back-end:
     # Use the published image and tag from Docker Hub which is used to build the turnkey Docker distribution
     image: hubmap/ubkg-neo4j:current-release
+    container_name: neo4j
 
     # Map host machine ports to container ports, as defined in the container.cfg file for the back end.
     ports:
