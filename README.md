@@ -168,7 +168,21 @@ Container ports will have the following links:
 | front-end              | 7100:8080           | UBKGBox home page                                         |
 | api                    | 7000:8080           | root of UBKGBox instance of the UBKG API                  |
 | auth                   | 7100:8080           | root of UBKGBox instance of the (UMLS) authentication API |
+---
 
+# Logging
+**UBKGBox** provides logs for each of its components.
 
+| Component | log sub directory | log                        | purpose                                       |
+|-----------|-------------------|----------------------------|:----------------------------------------------|
+| back end  | logs              | various                    | logs from the neo4j instance in the back end  |
+| api       | log               | ubkg-api.log               | UBKG API log                                  |
+|           |                   | nginx_access_ubkg-api.log  | calls made to the UBKG API                    |
+|           |                   | nginx_error_ubkg-api.log   | errors from the web host of the UBKG API      |
+| auth      | log               | ubkg-auth.log              | ubkg-auth API log                             |
+|           |                   | nginx_access_ubkg-auth.log | calls made to the ubkg-auth API               |
+|           |                   | nginx_error_ubkg-auth.log  | errors from the Web host of the ubkg-auth API |
+| Guesdt    | log               | nginx_access-guesdt.log    | calls made to the Guesdt application          |
+|           |                   | nginx_error-guesdt.log     | errors from the front end related to Guesdt   |
 
 
