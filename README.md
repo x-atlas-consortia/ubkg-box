@@ -6,9 +6,9 @@ This repository describes **UBKGBox**: a self-contained, multi-component UBKG ap
 - a **back end** that hosts an instance of a UBKG context in neo4j
 - an **API** service that queries the back-end instance
 - a **front end** that:
-  - acts as a reverse proxy for the API service
+  - acts as a reverse proxy for other services
   - hosts the UBKGBox home page
-  - hosts the **Guesdt** application
+- a **guesdt** service that hosts an instance of Guesdt that executes endpoints of the API service
 - an **authorization** service that works with the reverse proxy of the front end to authorize against the UMLS API
 - a **Swagger** instance that documents the endpoints of the API
 
@@ -19,15 +19,16 @@ This repository describes **UBKGBox**: a self-contained, multi-component UBKG ap
 The components of UBKGBox are built from source distributed among multiple 
 GitHub repositories:
 
-| Component     | Role                                                        | Default container (service) name | GitHub Repository                                                     |
-|---------------|-------------------------------------------------------------|:---------------------------------|-----------------------------------------------------------------------|
-| back end      | hosts a neo4j instance of a UBKG context                    | back-end                         | [ubkg-neo4j](https://github.com/x-atlas-consortia/ubkg-neo4j)         |
-| API           | hosts an instance of the UBKG API that queries the back end | api                              | [ubkg-api](https://github.com/x-atlas-consortia/ubkg-api)             |
-| authorization | authorizes against the UMLS API                             | auth                             | [ubkg-auth](https://github.com/x-atlas-consortia/ubkg-auth)           |
-| front end     | reverse proxy and UI host                                   | front-end                        | [ubkg-front-end](https://github.com/x-atlas-consortia/ubkg-front-end) |
-| Swagger       | (pending)                                                   | swagger                          | (pending)                                                             |
+| Component     | Role                                                             | Service name   | Default container name        | GitHub Repository                                                     |
+|---------------|------------------------------------------------------------------|:---------------|:------------------------------|-----------------------------------------------------------------------|
+| back end      | hosts a neo4j instance of a UBKG context                         | ubkg-back-end  | back-end                      | [ubkg-neo4j](https://github.com/x-atlas-consortia/ubkg-neo4j)         |
+| API           | hosts an instance of the UBKG API that queries the back end      | ubkg-api       | api                           | [ubkg-api](https://github.com/x-atlas-consortia/ubkg-api)             |
+| authorization | authorizes against the UMLS API                                  | ubkg-auth      | auth                          | [ubkg-auth](https://github.com/x-atlas-consortia/ubkg-auth)           |
+| front end     | reverse proxy and UI host                                        | ubkg-front-end | front-end                     | [ubkg-front-end](https://github.com/x-atlas-consortia/ubkg-front-end) |
+| guesdt        | hosts an Guesdt instance that executes endpoints of the UBKG API | ubkg-guesdt    | guesdt                        | [Guesdt](https://github.com/x-atlas-consortia/Guesdt)                 |
+| Swagger       | (pending)                                                        | ubkg-swagger   | swagger                       | (pending)                                                             |
 
-![img_2.png](img_2.png)
+![img_3.png](img_3.png)
 
 
 ---
@@ -56,12 +57,13 @@ image, mounted to an external volume that contains a UBKG context created by the
 ### Validate Docker Hub containers
 **UBKGBox** assumes the existence of the following public Docker images in Docker Hub:
 
-| Component     | Image tag                         |
-|---------------|-----------------------------------|
-| front end     | hubmap/ubkg-front-end:latest      |
-| authorization | hubmap/ubkg-auth:latest           |
-| api           | hubmap/ubkg-api:latest            |
-| back end      | hubmap/ubkg-neo4j:current-release |
+| Component     | Image tag                                                                                     |
+|---------------|-----------------------------------------------------------------------------------------------|
+| front end     | [hubmap/ubkg-front-end:latest](https://hub.docker.com/r/hubmap/ubkg-front-end/tags)           |
+| authorization | [hubmap/ubkg-auth:latest](https://hub.docker.com/r/hubmap/ubkg-auth/tags)                     |
+| api           | [hubmap/ubkg-api:latest](https://hub.docker.com/r/hubmap/ubkg-api/tags)                       |
+| back end      | [hubmap/ubkg-neo4j:current-release](https://hub.docker.com/r/hubmap/ubkg-neo4j)               |
+| guesdt        | [hubmap/ubkg-guesdt:latest](https://hub.docker.com/repository/docker/hubmap/ubkg-guesdt/tags) |
 
 To build and publish new versions of the image for a component, 
 consult the corresponding GitHub repository for instructions.
@@ -157,17 +159,19 @@ When **build_ubkb_box.sh** executes, the Container view of Docker Desktop will s
   - _neo4j_
   - _api_
   - _auth_
+  - _Guesdt_
   - _swagger_
 
 Container ports will have the following links:
 
-| Container default name | default port        | link                                                      |
-|------------------------|---------------------|-----------------------------------------------------------|
-| neo4j                  | port mapped to 7474 | neo4j browser (HTTP)                                      |
-| n3o4j                  | port mapped to 7687 | neo4j bolt                                                |
-| front-end              | 7100:8080           | UBKGBox home page                                         |
-| api                    | 7000:8080           | root of UBKGBox instance of the UBKG API                  |
-| auth                   | 7100:8080           | root of UBKGBox instance of the (UMLS) authentication API |
+| Container name | default port        | link                                                      |
+|----------------|---------------------|-----------------------------------------------------------|
+| neo4j          | port mapped to 7474 | neo4j browser (HTTP)                                      |
+| neo4j          | port mapped to 7687 | neo4j bolt                                                |
+| front-end      | 7100:8080           | UBKGBox home page                                         |
+| api            | internal            | root of UBKGBox instance of the UBKG API                  |
+| auth           | internal            | root of UBKGBox instance of the (UMLS) authentication API |
+| Guesdt         | internal            | root of UBKGBox instance of Guesdt                        |
 ---
 
 # Logging

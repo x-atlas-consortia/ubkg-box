@@ -8,7 +8,7 @@ services:
     container_name: front-end
     image: hubmap/ubkg-front-end:latest
     ports:
-      - "7100:8080"
+      - "7000:8080"
 
     # Wait until the neo4j server in ubkg-back-end is running.
     depends_on:
@@ -30,6 +30,11 @@ services:
       - HOST_GID=${HOST_GID:-1002}
       - HOST_UID=${HOST_UID:-1002}
 
+    networks:
+      # The front end service is the only service exposed externally.
+      - ubkg_net
+
+
     mem_limit: 2g # Limit to 2GB of RAM
 
   # ubkg-auth hosts the ubkg-auth UMLS authorization service.
@@ -37,8 +42,8 @@ services:
   ubkg-auth:
     image: hubmap/ubkg-auth:latest
     container_name: auth
-    ports:
-      - "7200:8080"
+    expose:
+      - "8080"
 
     # Wait until the neo4j server in ubkg-back-end is running.
     depends_on:
@@ -62,6 +67,9 @@ services:
 
     mem_limit: 2g # Limit to 2GB of RAM
 
+    networks:
+      - ubkg_net
+
   # ubkg-api hosts the UBKG-API.
   ubkg-api:
     # Use the published image and tag from Docker Hub
@@ -73,8 +81,8 @@ services:
     # since nginx is running under non-root user ubkg.
     # Divergence from standard hubmapconsortium API architecture:
     # The standard architecture maps port 6666, which the Chrome browser considers an "unsafe port".
-    ports:
-      - "7000:8080"
+    expose:
+      - "8080"
     volumes:
       # Mount the ubkg-api's app config (in the instance subdirectory of the build directory) to container in order to keep it outside the image.
       - "./api_cfg:/usr/src/app/src/ubkg_api/instance"
@@ -95,14 +103,17 @@ services:
       ubkg-back-end:
         condition: service_healthy
 
+    networks:
+      - ubkg_net
+
   # ubkg-guesdt hosts the Guesdt application
   ubkg-guesdt:
     # Use the published image and tag from Docker Hub
     image: hubmap/ubkg-guesdt:latest
     container_name: Guesdt
 
-    ports:
-      - "7300:8080"
+    expose:
+      - "8080"
     volumes:
       # Mount the nginx log to container
       - "./log:/usr/src/app/log"
@@ -111,6 +122,9 @@ services:
     depends_on:
       ubkg-back-end:
         condition: service_healthy
+
+    networks:
+      - ubkg_net
 
   # ubkg-back-end will be based on a local turnkey distribution of a Docker neo4j container. 
   ubkg-back-end:
@@ -148,6 +162,15 @@ services:
       retries: 20
       start_period: 30s
 
+    networks:
+      - ubkg_net
 
 
-    
+networks:
+
+  ubkg_net:
+    driver: bridge
+    #driver_opts:
+      # bind front end to localhost
+      #com.docker.network.bridge.host_binding_ipv4: 127.0.0.1
+
