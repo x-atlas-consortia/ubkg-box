@@ -2,20 +2,29 @@
 
 <img width="212" alt="image" src="https://github.com/user-attachments/assets/815336f4-4ae0-40e6-8b10-511250d213dd" />
 
-This repository describes **UBKGBox**: a self-contained, multi-component UBKG application featuring:
+This repository describes **UBKGBox**: a self-contained, multi-component UBKG application environment featuring:
 - a **back end** that hosts an instance of a UBKG context in neo4j
-- an **API** service that queries the back-end instance
 - a **front end** that:
-  - acts as a reverse proxy for other services
+  - acts as a reverse proxy for other client services
   - hosts the UBKGBox home page
-- a **guesdt** service that hosts an instance of Guesdt that executes endpoints of the API service
 - an **authorization** service that works with the reverse proxy of the front end to authorize against the UMLS API
-- a **Swagger** instance that documents the endpoints of the API
+- UBKG client services that work with the neo4j instance hosted in the back end service, including:
+  - an **API** service  
+  - a **guesdt** service that hosts an instance of the **Guesdt** client that executes endpoints of the API service
+  - a **Swagger** instance that documents the endpoints of the API and uses the API
+
+Components interact within an internal network and are available only after the user provides a valid UMLS API key
+in the front end's home page.
 
 ---
 # UBKGBox Architecture
 
-**UBKGBox** comprises a Docker Compose file and a shell script. 
+**UBKGBox** comprises:
+- a Docker Compose file
+- a Docker turnkey distribution, either [built locally](https://github.com/x-atlas-consortia/ubkg-neo4j/blob/main/docs/BUILD_INSTRUCTIONS.md) or obtained from the ubkg-download site.
+- configuration files
+- a shell script
+
 The components of UBKGBox are built from source distributed among multiple 
 GitHub repositories:
 
@@ -162,16 +171,10 @@ When **build_ubkb_box.sh** executes, the Container view of Docker Desktop will s
   - _Guesdt_
   - _swagger_
 
-Container ports will have the following links:
+The **ubkg-front-end** container is the only container in **UBKGBox** that will have external ports:
+- 7000 for the **UBKGBox** home page
+- 7001 to map to the internal bolt port of the neo4j server hosted in **ubkg-back-end**.
 
-| Container name | default port        | link                                                      |
-|----------------|---------------------|-----------------------------------------------------------|
-| neo4j          | port mapped to 7474 | neo4j browser (HTTP)                                      |
-| neo4j          | port mapped to 7687 | neo4j bolt                                                |
-| front-end      | 7100:8080           | UBKGBox home page                                         |
-| api            | internal            | root of UBKGBox instance of the UBKG API                  |
-| auth           | internal            | root of UBKGBox instance of the (UMLS) authentication API |
-| Guesdt         | internal            | root of UBKGBox instance of Guesdt                        |
 ---
 
 # Logging
