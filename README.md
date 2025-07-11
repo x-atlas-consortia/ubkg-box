@@ -19,6 +19,8 @@ in the front end's home page.
 ---
 # UBKGBox Architecture
 
+![img_4.png](img_4.png)
+
 **UBKGBox** comprises:
 - a Docker Compose file
 - a Docker turnkey distribution, either [built locally](https://github.com/x-atlas-consortia/ubkg-neo4j/blob/main/docs/BUILD_INSTRUCTIONS.md) or obtained from the ubkg-download site.
@@ -37,7 +39,7 @@ GitHub repositories:
 | guesdt        | hosts an Guesdt instance that executes endpoints of the UBKG API | ubkg-guesdt    | guesdt                        | [Guesdt](https://github.com/x-atlas-consortia/Guesdt)                 |
 | Swagger       | (pending)                                                        | ubkg-swagger   | swagger                       | (pending)                                                             |
 
-![img_3.png](img_3.png)
+
 
 
 ---
