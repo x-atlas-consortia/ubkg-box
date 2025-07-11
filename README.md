@@ -153,6 +153,7 @@ The value of **container_name** for the **ubkg-back-end** service must match the
 
 From a Terminal session, execute `./build_ubkgbox.sh up`. 
 The **build_ubkgbox.sh** script will:
+   - add a subnode to the local hosts file named **neo4j.ubkgbox.com**, mapped to the localhost/loopback IP.
    - validate and obtain information from **container.cfg**.
    - execute Docker Compose on **ubkg-box-docker-compose.yml**.
 
@@ -175,10 +176,31 @@ The **ubkg-front-end** container is the only container in **UBKGBox** that will 
 - 7000 for the **UBKGBox** home page
 - 7001 to map to the internal bolt port of the neo4j server hosted in **ubkg-back-end**.
 
+# UBKGBOX subnodes
+
+To facilitate the reverse proxy of the **ubkg-front-end** service, UBKGBox associates all downstream
+services with network subnodes:
+
+| subnode           | service        |
+|-------------------|----------------|
+| nginx.ubkgbox.com | ubkg-front-end |
+| auth.ubkgbox.com  | ubkg-auth      |
+| api.ubkgbox.com   | ubkg-api       |
+| neo4j.ubkgbox.com | ubkg-guest     |
+| neo4j.guesdt.com  | ubkg-guesdt    |
+
+By default, subnodes are mapped to the localhost/loopback IP on the local machine.
+
+Because modifying the hosts file requires administrative privileges, the **build_ubkgbox.sh** script
+will ask for an administrative password.
+
+If an adminstrative password is not provided, **build_ubkgbox.sh** will still compose a **UBKGBox** application; however, no UBKG
+clients will be available.
 ---
 
 # Logging
-**UBKGBox** provides logs for each of its components.
+**UBKGBox** provides logs for each of its components. UBKGBox logs will be located in the 
+_/log_ subdirectory of the build directory. These are different from the logs that the neo4j instance in **ubkg-back-end** generates: the neo4j logs are in the _logs_ subdirectory.
 
 | Component | log sub directory | log                        | purpose                                       |
 |-----------|-------------------|----------------------------|:----------------------------------------------|

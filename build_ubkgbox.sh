@@ -21,6 +21,12 @@ Help()
    echo "-h   print this help"
    echo "Review container.cfg.example for descriptions of parameters."
 }
+
+echo "****************************************"
+echo "UBKGBox build script"
+echo "****************************************"
+
+
 ##############################
 # Set defaults.
 config_file="container.cfg"
@@ -81,6 +87,9 @@ export NEO4J_PASSWORD="$neo4j_password"
 # Export neo4j ui and bolt ports.
 export UI_PORT="$ui_port"
 export BOLT_PORT="$bolt_port"
+
+# Add a subnode named neo4j.ubkgbox.com to the hosts file.
+./add_neo4j_to_host.sh
 
 # Call Docker compose for ubkgbox.
 docker compose -f ubkgbox-docker-compose.yml -p ubkgbox up
