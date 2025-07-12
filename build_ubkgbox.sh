@@ -26,6 +26,14 @@ echo "****************************************"
 echo "UBKGBox build script"
 echo "****************************************"
 
+# Add a subnode named neo4j.ubkgbox.com to the hosts file.
+./add_subnodes_to_host.sh
+if [ $? -ne 0 ]; then
+    echo "Exiting."
+    exit 1
+fi
+
+
 
 ##############################
 # Set defaults.
@@ -87,9 +95,6 @@ export NEO4J_PASSWORD="$neo4j_password"
 # Export neo4j ui and bolt ports.
 export UI_PORT="$ui_port"
 export BOLT_PORT="$bolt_port"
-
-# Add a subnode named neo4j.ubkgbox.com to the hosts file.
-./add_neo4j_to_host.sh
 
 # Call Docker compose for ubkgbox.
 docker compose -f ubkgbox-docker-compose.yml -p ubkgbox up

@@ -19,7 +19,7 @@ in the front end's home page.
 ---
 # UBKGBox Architecture
 
-![img_4.png](img_4.png)
+![img_5.png](img_5.png)
 
 **UBKGBox** comprises:
 - a Docker Compose file
@@ -180,40 +180,34 @@ The **ubkg-front-end** container is the only container in **UBKGBox** that will 
 
 # UBKGBOX subnodes
 
-To facilitate the reverse proxy of the **ubkg-front-end** service, UBKGBox associates all downstream
-services with network subnodes:
+**UBKGBox** defines a network subnode named _neo4j.ubkg.com_ to support reverse proxying to the neo4j browser
+application hosted in the **ubkg-back-end** service.
 
-| subnode           | service        |
-|-------------------|----------------|
-| nginx.ubkgbox.com | ubkg-front-end |
-| auth.ubkgbox.com  | ubkg-auth      |
-| api.ubkgbox.com   | ubkg-api       |
-| neo4j.ubkgbox.com | ubkg-guest     |
-| neo4j.guesdt.com  | ubkg-guesdt    |
+The UBKG build script (**build_ubkgbox.sh**) calls the script **add_subnodes_to_host.sh** to add subnodes to the host.
 
-By default, subnodes are mapped to the localhost/loopback IP on the local machine.
+By default, _neo4j.ubkgbox.com_ maps to the localhost/loopback IP on the local machine (127.0.0.1).
 
-Because modifying the hosts file requires administrative privileges, the **build_ubkgbox.sh** script
+Because modifying the hosts file requires administrative privileges, the **add_subnodes_to_host** script
 will ask for an administrative password.
 
-If an adminstrative password is not provided, **build_ubkgbox.sh** will still compose a **UBKGBox** application; however, no UBKG
-clients will be available.
 ---
 
 # Logging
 **UBKGBox** provides logs for each of its components. UBKGBox logs will be located in the 
 _/log_ subdirectory of the build directory. These are different from the logs that the neo4j instance in **ubkg-back-end** generates: the neo4j logs are in the _logs_ subdirectory.
 
-| Component | log sub directory | log                        | purpose                                       |
-|-----------|-------------------|----------------------------|:----------------------------------------------|
-| back end  | logs              | various                    | logs from the neo4j instance in the back end  |
-| api       | log               | ubkg-api.log               | UBKG API log                                  |
-|           |                   | nginx_access_ubkg-api.log  | calls made to the UBKG API                    |
-|           |                   | nginx_error_ubkg-api.log   | errors from the web host of the UBKG API      |
-| auth      | log               | ubkg-auth.log              | ubkg-auth API log                             |
-|           |                   | nginx_access_ubkg-auth.log | calls made to the ubkg-auth API               |
-|           |                   | nginx_error_ubkg-auth.log  | errors from the Web host of the ubkg-auth API |
-| Guesdt    | log               | nginx_access-guesdt.log    | calls made to the Guesdt application          |
-|           |                   | nginx_error-guesdt.log     | errors from the front end related to Guesdt   |
+| Component | log sub directory | log                             | purpose                                       |
+|-----------|-------------------|---------------------------------|:----------------------------------------------|
+| back end  | logs              | various                         | logs from the neo4j instance in the back end  |
+| front end | log               | nginx_access_ubkg-front-end.log | HTTP calls made to the front end              |
+|           |                   | nginx_error_ubkg-front-end.log  | errors from the front end                     |
+| api       | log               | ubkg-api.log                    | UBKG API log                                  |
+|           |                   | nginx_access_ubkg-api.log       | HTTP calls made to the UBKG API               |
+|           |                   | nginx_error_ubkg-api.log        | errors from the web host of the UBKG API      |
+| auth      | log               | ubkg-auth.log                   | ubkg-auth API log                             |
+|           |                   | nginx_access_ubkg-auth.log      | HTTP calls made to the ubkg-auth API          |
+|           |                   | nginx_error_ubkg-auth.log       | errors from the Web host of the ubkg-auth API |
+| Guesdt    | log               | nginx_access-guesdt.log         | HTTP calls made to the Guesdt application     |
+|           |                   | nginx_error-guesdt.log          | errors from the front end related to Guesdt   |
 
 

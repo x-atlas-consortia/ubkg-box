@@ -3,20 +3,22 @@
 # Adds the subnode neo4j.ubkgbox.com to the local host file.
 # This has been tested on MacOs.
 
-HOST_ENTRY_NGINX="127.0.0.1    nginx.ubkgbox.com"
 HOST_ENTRY_NEO4J="127.0.0.1    neo4j.ubkgbox.com"
-HOST_ENTRY_AUTH="127.0.0.1    auth.ubkgbox.com"
-HOST_ENTRY_API="127.0.0.1    api.ubkgbox.com"
-HOST_ENTRY_GUESDT="127.0.0.1    guesdt.ubkgbox.com"
 
-# Prompt for sudo password at the start
-echo "The UBKGBox application uses subnodes (nginx.ubkgbox.com, neo4j.ubkgbox.com, auth.ubkgbox.com, api.ubkgbox.com, guesdt.ubkgbox.com) that are mapped by default to the localhost/loopback IP (127.0.0.1)."
-echo "Setting up subnodes requires modifying the hosts file on the local machine, which requires administrative (sudo) privileges."
+# Prompt for sudo password at the start.
+    
+if ! sudo -n true 2>/dev/null; then
+    echo
+    echo "The UBKGBox application uses subnodes (*.ubkgbox.com) that are mapped by default to the localhost/loopback IP (127.0.0.1)."
+    echo "Setting up subnodes requires modifying the hosts file on the local machine. "
+    echo "This requires administrative (sudo) privileges."
+    echo 
+fi
 
 if [[ "$OSTYPE" == "linux-gnu"* || "$OSTYPE" == "darwin"* ]]; then
     sudo -v || exit 1
     if ! sudo -v; then
-        echo "Sudo authentication failed. Applications will not be available to UBKGBox."
+        echo "Authentication with sudo failed."
         exit 1
     fi
 fi
@@ -27,11 +29,7 @@ add_to_hosts() {
     else
         echo "Adding UBKGBox subnodes to /etc/hosts"
         echo "# UBKGBox" | sudo tee -a /etc/hosts > /dev/null
-        echo "$HOST_ENTRY_NGINX" | sudo tee -a /etc/hosts > /dev/null
         echo "$HOST_ENTRY_NEO4J" | sudo tee -a /etc/hosts > /dev/null
-        echo "$HOST_ENTRY_AUTH" | sudo tee -a /etc/hosts > /dev/null
-        echo "$HOST_ENTRY_API" | sudo tee -a /etc/hosts > /dev/null
-        echo "$HOST_ENTRY_GUESDT" | sudo tee -a /etc/hosts > /dev/null
         echo "# UBKGBox" | sudo tee -a /etc/hosts > /dev/null
     fi
 }
@@ -73,11 +71,7 @@ add_to_hosts_windows() {
         echo "Adding UBKGBox subnnodes to $HOSTS_PATH"
         # Requires script to be run as administrator or from an elevated shell
         echo "# UBKGBox" | sudo tee -a /etc/hosts > /dev/null
-        echo "$HOST_ENTRY_NGINX" | sudo tee -a "$HOSTS_PATH" > /dev/null
         echo "$HOST_ENTRY_NEO4J" | sudo tee -a "$HOSTS_PATH" > /dev/null
-        echo "$HOST_ENTRY_AUTH" | sudo tee -a "$HOSTS_PATH" > /dev/null
-        echo "$HOST_ENTRY_API" | sudo tee -a "$HOSTS_PATH" > /dev/null
-        echo "$HOST_ENTRY_GUESDT" | sudo tee -a "$HOSTS_PATH" > /dev/null
         echo "# UBKGBox" | sudo tee -a /etc/hosts > /dev/null
     fi
 }
@@ -112,5 +106,3 @@ case "$OSTYPE" in
     exit 1
     ;;
 esac
-
-echo "Done."
