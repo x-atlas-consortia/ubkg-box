@@ -193,8 +193,12 @@ will ask for an administrative password.
 ---
 
 # Logging
-**UBKGBox** provides logs for each of its components. UBKGBox logs will be located in the 
-_/log_ subdirectory of the build directory. These are different from the logs that the neo4j instance in **ubkg-back-end** generates: the neo4j logs are in the _logs_ subdirectory.
+**UBKGBox** provides logs for each of its components. 
+These logs are external volumes exported from the Docker service containers of **UBKGBox**. 
+**UBKGBox** logs will be located in the _/log_ubkgbox_ subdirectory of the build directory.
+
+The _logs_ directory countains the logs of the neo4j instance in **ubkg-back-end**. The _logs_
+directory name is consistent with the external volume mounted by the turkey Docker distribution.
 
 | Component | log sub directory | log                             | purpose                                       |
 |-----------|-------------------|---------------------------------|:----------------------------------------------|

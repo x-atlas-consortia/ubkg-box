@@ -3,12 +3,15 @@ name: ubkgbox
 
 services:
 
-  # ubkg-front-end is a standalone UI with a landing page.
+  ############
+  # ubkg-front-end provides both a UI with a landing page and a reverse proxy to the other services.
+
   ubkg-front-end:
     container_name: front-end
     image: hubmap/ubkg-front-end:latest
     ports:
-      - "7000:8080"
+      - "7000:8080"   # HTTP
+      - "7001:7001"   # Bolt via stream
 
     # Wait until the neo4j server in ubkg-back-end is running.
     depends_on:
@@ -19,7 +22,8 @@ services:
     restart: always
 
     volumes:
-      - "./log:/usr/src/app/log"
+      # Mount the nginx logs to the container.
+      - "./log_ubkgbox:/usr/src/app/log"
 
     environment:
       # neo4j browser port for the ubkg-back-end service.
@@ -31,18 +35,20 @@ services:
       - HOST_UID=${HOST_UID:-1002}
 
     networks:
-      # The front end service is the only service exposed externally.
+      # UBKGBox internal network
       - ubkg_net
 
 
     mem_limit: 2g # Limit to 2GB of RAM
 
+  ############
   # ubkg-auth hosts the ubkg-auth UMLS authorization service.
 
   ubkg-auth:
     image: hubmap/ubkg-auth:latest
     container_name: auth
     expose:
+      # internal network port
       - "8080"
 
     # Wait until the neo4j server in ubkg-back-end is running.
@@ -54,8 +60,9 @@ services:
     restart: always
 
     volumes:
-      # Mount the ubkg-auth's app config (in the instance subdirectory of the build directory) to container in order to keep it outside the image.
-      - "./log:/usr/src/app/log"
+      # Mount the app config (in the instance subdirectory of the build directory) to the container to keep it external to the image.
+      - "./log_ubkgbox:/usr/src/app/log"
+      # Mount the nginx logs to the container.
       - "./api_cfg:/usr/src/app/src/ubkg_api/instance"
 
     environment:
@@ -70,24 +77,22 @@ services:
     networks:
       - ubkg_net
 
+  ############
   # ubkg-api hosts the UBKG-API.
+
   ubkg-api:
     # Use the published image and tag from Docker Hub
     image: hubmap/ubkg-api:latest
     container_name: api
 
-    # Map host machine port 7000 to container port 8080
-    # Only root can listen on ports below 1024, we use higher-numbered ports
-    # since nginx is running under non-root user ubkg.
-    # Divergence from standard hubmapconsortium API architecture:
-    # The standard architecture maps port 6666, which the Chrome browser considers an "unsafe port".
+    # internal network port
     expose:
       - "8080"
     volumes:
-      # Mount the ubkg-api's app config (in the instance subdirectory of the build directory) to container in order to keep it outside the image.
+      # Mount the app config (in the instance subdirectory of the build directory) to the container to keep it external to the image.
       - "./api_cfg:/usr/src/app/src/ubkg_api/instance"
-      # Mount the nginx log to container
-      - "./log:/usr/src/app/log"
+      # Mount the nginx logs to the container.
+      - "./log_ubkgbox:/usr/src/app/log"
 
     environment:
       # UID and GID 1001 to match the ubkg user by default.
@@ -106,17 +111,20 @@ services:
     networks:
       - ubkg_net
 
-  # ubkg-guesdt hosts the Guesdt application
+  ############
+  # ubkg-guesdt hosts the Guesdt application.
+
   ubkg-guesdt:
     # Use the published image and tag from Docker Hub
     image: hubmap/ubkg-guesdt:latest
     container_name: Guesdt
 
+    # internal network port
     expose:
       - "8080"
     volumes:
-      # Mount the nginx log to container
-      - "./log:/usr/src/app/log"
+      # Mount the nginx logs to the container.
+      - "./log_ubkgbox:/usr/src/app/log"
 
     # Wait until the neo4j server ubkg-back-end is running.
     depends_on:
@@ -126,35 +134,32 @@ services:
     networks:
       - ubkg_net
 
-  # ubkg-back-end will be based on a local turnkey distribution of a Docker neo4j container. 
+  ############
+  # ubkg-back-end is based on a local turnkey distribution of a Docker neo4j container. 
+
   ubkg-back-end:
-    # Use the published image and tag from Docker Hub which is used to build the turnkey Docker distribution
+    # Use the published image and tag from Docker Hub that was used to build the turnkey Docker distribution.
     image: hubmap/ubkg-neo4j:current-release
     container_name: neo4j
 
-    # Map host machine ports to container ports, as defined in the container.cfg file for the back end.
-    ports:
-      # ui port
-      - ${UI_PORT}:7474
-      # bolt port
-      - ${BOLT_PORT}:7687
-
-    # Map to the external bind mounts.
+   
+    # Map to the external bind mounts. Directory names will match those of the turnkey Docker distribution.
     volumes:
       # neo4j database
       - "./data:/usr/src/app/neo4j/data"
-      # logs
+      # neo4j logs
       - "./logs:/usr/src/app/neo4j/logs"
 
     environment:
       # neo4j username and password obtained by the build_ubkgbox.sh script from container.cfg.
       - NEO4J_USER
       - NEO4J_PASSWORD
+      - NEO4J_dbms_connector_http_listen__address=0.0.0.0:7474
 
     mem_limit: 2g 
 
     # Check that the neo4j service is running in the container. The startup process takes some time; in addition, it stops and starts
-    # the neo4j server. Wait at least 30 s before starting the health check.
+    # the neo4j server.
     healthcheck:
       test: [ "CMD", "/usr/src/app/neo4j/bin/cypher-shell", "-u", "neo4j", "-p", "${NEO4J_PASSWORD}", "MATCH () RETURN count(*) as count" ]
       interval: 10s
@@ -170,7 +175,4 @@ networks:
 
   ubkg_net:
     driver: bridge
-    #driver_opts:
-      # bind front end to localhost
-      #com.docker.network.bridge.host_binding_ipv4: 127.0.0.1
-
+    
