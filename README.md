@@ -19,7 +19,7 @@ in the front end's home page.
 ---
 # UBKGBox Architecture
 
-![img_5.png](img_5.png)
+![img_1.png](img_1.png)
 
 **UBKGBox** comprises:
 - a Docker Compose file
@@ -96,7 +96,8 @@ After building the turnkey distribution,
 ###### from the ubkg-box repository
    - Copy **build_ubkgbox.sh** to the build directory. 
    - Set permissions on the script with the command `chmod +x build_ubkgbox.sh`. 
-   - Copy **ubkgbox-docker-compose.yml** file to the build directory.
+   - Copy **ubkgbox-docker-compose.yml** to the build directory.
+   - Copy **swagger-initializer.js** to the build container.
 
 ###### from the ubkg-api repository
 The **api** service hosts an instance of ubkg-api that
@@ -200,7 +201,7 @@ will ask for an administrative password.
 ---
 
 # Logging
-**UBKGBox** provides logs for each of its components. 
+**UBKGBox** provides logs for all components except for **ubkg-swagger**.
 These logs are external volumes exported from the Docker service containers of **UBKGBox**. 
 **UBKGBox** logs will be located in the _/log_ubkgbox_ subdirectory of the build directory.
 
