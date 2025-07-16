@@ -37,9 +37,7 @@ GitHub repositories:
 | authorization | authorizes against the UMLS API                                  | ubkg-auth      | auth                          | [ubkg-auth](https://github.com/x-atlas-consortia/ubkg-auth)           |
 | front end     | reverse proxy and UI host                                        | ubkg-front-end | front-end                     | [ubkg-front-end](https://github.com/x-atlas-consortia/ubkg-front-end) |
 | guesdt        | hosts an Guesdt instance that executes endpoints of the UBKG API | ubkg-guesdt    | guesdt                        | [Guesdt](https://github.com/x-atlas-consortia/Guesdt)                 |
-| Swagger       | (pending)                                                        | ubkg-swagger   | swagger                       | (pending)                                                             |
-
-
+| Swagger       | Swagger UI instance that executes endpoints of the UBKG API      | ubkg-swagger   | swagger                       | none                                                                  |
 
 
 ---
@@ -150,6 +148,15 @@ the custom names for the containers.
 
 The value of **container_name** for the **ubkg-back-end** service must match the value used in the 
 **SERVER** key of the ubkg-api instance's **app.cfg**.
+
+###### ubkg-swagger and swagger-initializer.js
+Unlike the other UBKGBox services, **ubkg-swagger** uses the official Swagger UI Docker image (_swaggerapi/swagger-ui_).
+No Dockerfile is needed: all information is in **ubkgbox-docker-compose.yml**.
+
+Linking the Swagger UI instance in **ubkg-swagger** to the ubkg-api instance in the **ubkg-api** service
+requires that the file **swagger-initialize.js** be located in the same directory as **ubkgbox-docker-compose.yml**.
+The url in **swagger-initialize.js** should point to the raw location of the OpenAPI specification file in the ubkg-api repo
+for the ubkgbox implementation.
 
 ### Compose the application
 

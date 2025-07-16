@@ -135,6 +135,28 @@ services:
       - ubkg_net
 
   ############
+  # ubkg-swagger is a Swagger UI linked to the ubkg-api service.
+  ubkg-swagger:
+    image: swaggerapi/swagger-ui
+
+    container_name: swagger
+
+    # Mount a custom Swagger initialization file.
+    volumes:
+      - ./swagger-initializer.js:/usr/share/nginx/html/swagger-initializer.js
+
+    expose:
+      - "8080" 
+
+    depends_on:
+      ubkg-back-end:
+        condition: service_healthy
+
+    networks:
+      - ubkg_net
+  
+
+  ############
   # ubkg-back-end is based on a local turnkey distribution of a Docker neo4j container. 
 
   ubkg-back-end:
