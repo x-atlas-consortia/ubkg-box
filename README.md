@@ -40,7 +40,7 @@ GitHub repositories:
 
 ---
 # Obtaining and using a UBKGBox distribution
-Refer to Using UBKGBox (link pending).
+Refer to [Using UBKGBox](https://github.com/x-atlas-consortia/ubkg-box/blob/main/documentation/Using%20UBKGBox.md).
 
 ---
 # Building a UBKGBox distribution
