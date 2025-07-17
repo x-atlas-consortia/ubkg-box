@@ -1,4 +1,5 @@
-# UBKGBox
+# Unified Biomedical Knowledge Graph
+# UBKGBox application
 
 <img width="212" alt="image" src="https://github.com/user-attachments/assets/815336f4-4ae0-40e6-8b10-511250d213dd" />
 
@@ -11,10 +12,7 @@ This repository describes **UBKGBox**: a self-contained, multi-component UBKG ap
 - UBKG client services that work with the neo4j instance hosted in the back end service, including:
   - an **API** service  
   - a **guesdt** service that hosts an instance of the **Guesdt** client that executes endpoints of the API service
-  - a **Swagger** instance that documents the endpoints of the API and uses the API
-
-Components interact within an internal network and are available only after the user provides a valid UMLS API key
-in the front end's home page.
+ 
 
 ---
 # UBKGBox Architecture
@@ -37,18 +35,12 @@ GitHub repositories:
 | authorization | authorizes against the UMLS API                                  | ubkg-auth      | auth                          | [ubkg-auth](https://github.com/x-atlas-consortia/ubkg-auth)           |
 | front end     | reverse proxy and UI host                                        | ubkg-front-end | front-end                     | [ubkg-front-end](https://github.com/x-atlas-consortia/ubkg-front-end) |
 | guesdt        | hosts an Guesdt instance that executes endpoints of the UBKG API | ubkg-guesdt    | guesdt                        | [Guesdt](https://github.com/x-atlas-consortia/Guesdt)                 |
-| Swagger       | Swagger UI instance that executes endpoints of the UBKG API      | ubkg-swagger   | swagger                       | none                                                                  |
+| swagger       | Swagger UI instance that executes endpoints of the UBKG API      | ubkg-swagger   | swagger                       | none                                                                  |
 
 
 ---
-# Obtaining a UBKGBox distribution
-Instances of **UBKGBox** are distributed as a Zip file that can be downloaded from the [UBKG Download](https://ubkg-downloads.xconsortia.org/) site.
-INSTRUCTIONS PENDING 
-
----
-
-# Working with UBKGBox
-PENDING
+# Obtaining and using a UBKGBox distribution
+Refer to Using UBKGBox (link pending).
 
 ---
 # Building a UBKGBox distribution
