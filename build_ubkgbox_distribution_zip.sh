@@ -85,12 +85,15 @@ docker stop "neo4j" || true
 # 4. add_subnodes_to_host.sh - used by build_ubkgbox.sh
 # 5. ubkgbox-docker-compose.yml - the Docker Compose file
 # 6. swagger-initializer.js - the custom initialization file for the swagger component
+# 7. container.cfg - the configuration file for the neo4j back end.
 
 echo "Building file UBKGBox.zip."
 zip -9 -r "UBKGBox.zip" data/
-zip "UBKGBox.zip" api_cfg/
-zip "UBKGBox.zip" build_ubkgbox.sh
-zip "UBKGBox.zip" ubkgbox-docker-compose.yml
-zip "UBKGBox.zip" swagger-initializer.js
+zip -9 -r "UBKGBox.zip" api_cfg/
+zip -9 "UBKGBox.zip" build_ubkgbox.sh
+zip -9 "UBKGBox.zip" add_subnodes_to_host.sh
+zip -9 "UBKGBox.zip" ubkgbox-docker-compose.yml
+zip -9 "UBKGBox.zip" swagger-initializer.js
+zip -9 "UBKGBox.zip" container.cfg
 
 echo "The UBKGBox distribution is available in UBKGBox.zip."

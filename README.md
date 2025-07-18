@@ -22,6 +22,7 @@ This repository describes **UBKGBox**: a self-contained, multi-component UBKG ap
 The **UBKGBox** application comprises:
 - a Docker Compose file (**ubkgbox-docker-compose.yml**)
 - a Docker turnkey distribution of UBKG, either [built locally](https://github.com/x-atlas-consortia/ubkg-neo4j/blob/main/docs/BUILD_INSTRUCTIONS.md) or obtained from the [UBKG Downloads](https://ubkg-downloads.xconsortia.org/) site
+- the configuration file for the Docker turnkey distribution (**container.cfg**)
 - a build script (**build_ubkgbox.sh**)
 - a script to add network subnodes required for **UBKGBox** (**add_subnodes_to_host.sh**)
 - a custom Swagger initialization file (**swagger-initializer.js**)
@@ -114,6 +115,10 @@ created from the **ubkg-auth-app.example.cfg** file in the ubkg-auth repository'
 
 Configurable elements are italicized.
 
+###### container.cfg
+Although the purpose of **container.cfg** is to configure the build of a turnkey Docker UBKG distribution, it can be used to change the password of the neo4j user account in the neo4j database.
+The **UBKGBox** build script uses no configuration information from **container.cfg** other than _neo4j_password_.
+
 ###### app.cfg
 1. Required values
 
@@ -132,7 +137,7 @@ For instructions to configure query management, consult the README.md in the ubk
 - [Payload Size Limitation with Optional S3 Redirect](https://github.com/x-atlas-consortia/ubkg-api/tree/main?tab=readme-ov-file#payload-size-validation-with-optional-s3-redirection)
 
 The **app.cfg** file for the instance of ubkg-api in the **api** service container
-does not mplement query management features of the ubkg-api by default.
+does not implement query management features of the ubkg-api by default.
 
 ###### ubkg-auth-app.cfg
 The configuration file for the **auth** container (**ubkg-auth-app.cfg**) currently contains
