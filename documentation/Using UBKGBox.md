@@ -83,12 +83,14 @@ If the initial use of a **UBKGBox** component fails, the user should be able sim
 1. Open the **UBKGBox** home page at http://localhost:7000/.
 2. **UBKGBox** will check for a UMLS API key for the user. 
    - If the user has not provided a key, a modal box will appear:
+   
    ![img.png](img.png)
    - When the user provides a key, **UBKGBox** will store the key value in a session cookie. **UBKGBox** will not prompt for a UMLS key unless the cookie either expires or is removed.
-   - 
+   
 
 3. The Home page displays buttons that launch component applications.
-![img_1.png](img_1.png)
+
+![img_5.png](img_5.png)
 
 ### UBKG Documentation link
 The **Go to UBKG Documentation** button will open the [UBKG Documentation](https://ubkg.docs.xconsortia.org/) root in another tab.
