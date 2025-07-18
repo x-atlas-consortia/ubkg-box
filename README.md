@@ -181,6 +181,20 @@ The **ubkg-front-end** container is the only container in **UBKGBox** that will 
 - 7000 for the **UBKGBox** home page
 - 7001 to map to the internal bolt port of the neo4j server hosted in **ubkg-back-end**.
 
+### Build the distribution Zip
+Execute `./build_ubkgbox_distribution_zip.sh`.
+
+The script will:
+1. Stop the neo4j server hosted by the **ubkg-back-end** service and the service container itself. Stopping the neo4j service stabilizes the content of the database for Zip archival.
+2. Build a Zip archive of the **UBKGBox** components named **UBKGBox.zip**.
+
+### Upload to Globus
+1. Add release notes or other documents as needed to **UBKGBox.zip**.
+2. Rename **UBKGBox.zip** to a unique value--e.g., with a date stamp.
+3. Publish the distribution to the UBKG Downloads site:
+   - Upload the Zip file to the folder in the designated Globus collection.
+   - Update the **file_descriptions.json** file in the folder to reflect the new distribution.
+
 # UBKGBOX subnodes
 
 **UBKGBox** defines a network subnode named _neo4j.ubkg.com_ to support reverse proxying to the neo4j browser
