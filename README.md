@@ -19,14 +19,15 @@ This repository describes **UBKGBox**: a self-contained, multi-component UBKG ap
 
 ![img_1.png](img_1.png)
 
-**UBKGBox** comprises:
-- a Docker Compose file
-- a Docker turnkey distribution, either [built locally](https://github.com/x-atlas-consortia/ubkg-neo4j/blob/main/docs/BUILD_INSTRUCTIONS.md) or obtained from the ubkg-download site.
-- configuration files
-- a shell script
+The **UBKGBox** application comprises:
+- a Docker Compose file (**ubkgbox-docker-compose.yml**)
+- a Docker turnkey distribution of UBKG, either [built locally](https://github.com/x-atlas-consortia/ubkg-neo4j/blob/main/docs/BUILD_INSTRUCTIONS.md) or obtained from the [UBKG Downloads](https://ubkg-downloads.xconsortia.org/) site
+- a build script (**build_ubkgbox.sh**)
+- a script to add network subnodes required for **UBKGBox** (**add_subnodes_to_host.sh**)
+- a custom Swagger initialization file (**swagger-initializer.js**)
 
-The components of UBKGBox are built from source distributed among multiple 
-GitHub repositories:
+The components of UBKGBox are Docker containers that are built from source distributed among multiple 
+GitHub repositories, with images published in Docker Hub:
 
 | Component     | Role                                                             | Service name   | Default container name        | GitHub Repository                                                     |
 |---------------|------------------------------------------------------------------|:---------------|:------------------------------|-----------------------------------------------------------------------|
@@ -66,7 +67,7 @@ image, mounted to an external volume that contains a UBKG context created by the
 | back end      | [hubmap/ubkg-neo4j:current-release](https://hub.docker.com/r/hubmap/ubkg-neo4j)               |
 | guesdt        | [hubmap/ubkg-guesdt:latest](https://hub.docker.com/repository/docker/hubmap/ubkg-guesdt/tags) |
 
-To build and publish new versions of the image for a component, 
+To build and publish new versions of the image for a particular component, 
 consult the corresponding GitHub repository for instructions.
 
 ### Assemble the build directory
@@ -76,9 +77,8 @@ A turnkey distribution of a UBKG context is the foundation of a **UBKGBox** dist
 
 After building the turnkey distribution, 
 
-- The directory used to build the turnkey distribution will also be the directory used to build the 
+- The directory used to build or instantiate the turnkey distribution locally will also be the directory used to build the 
 **UBKGBox** distribution.
-- The **container.cfg** file for the turnkey distribution will be used by the **UBKGBox** workflow to obtain the neo4j ports for the **back end** container.
 
 #### Create api_cfg subdirectory
 **UBKGBox** assumes that configuration files for the API services (**api** and **auth**) are located in a subdirectory of the build directory named **api-cfg**.
@@ -86,8 +86,11 @@ After building the turnkey distribution,
 
 #### Add files to the build directory path
 ###### from the ubkg-box repository
-   - Copy **build_ubkgbox.sh** to the build directory. 
-   - Set permissions on the script with the command `chmod +x build_ubkgbox.sh`. 
+   - Copy the following scripts to the build directory:
+     - **build_ubkgbox.sh** 
+     - **add_subnodes_to_host.sh**
+     - **build_ubkgbox_distribution_zip.sh**
+   - If necessary, set permissions on the scripts with the command `chmod +x`. 
    - Copy **ubkgbox-docker-compose.yml** to the build directory.
    - Copy **swagger-initializer.js** to the build container.
 
@@ -153,7 +156,7 @@ for the ubkgbox implementation.
 
 ### Compose the application
 
-From a Terminal session, execute `./build_ubkgbox.sh up`. 
+From a Terminal session, execute `./build_ubkgbox.sh`. 
 The **build_ubkgbox.sh** script will:
    - add a subnode to the local hosts file named **neo4j.ubkgbox.com**, mapped to the localhost/loopback IP.
    - validate and obtain information from **container.cfg**.
