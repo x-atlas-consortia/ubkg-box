@@ -10,7 +10,7 @@ services:
     container_name: front-end
     image: hubmap/ubkg-front-end:latest
     ports:
-      - "7000:8080"   # HTTP
+      - "7070:8080"   # HTTP
       - "7001:7001"   # Bolt via stream
 
     # Wait until the neo4j server in ubkg-back-end is running.
