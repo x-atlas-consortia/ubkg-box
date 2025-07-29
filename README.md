@@ -152,6 +152,10 @@ The configurable items in the Docker compose file are:
    **SERVER** key of the ubkg-api instance's **app.cfg**.
 
 2. The HTTP port for the **UBKGBox** front end.
+3. The Bolt port for the **UBKGBox** environment (both the front end and back end components).
+
+Change only the first number in the **ports** assignments.
+
    ```commandline
      ubkg-front-end:
         container_name: front-end
@@ -160,19 +164,11 @@ The configurable items in the Docker compose file are:
             - "7070:8080"   # HTTP
             - "7071:7071"   # Bolt via stream.
    ```
-   The number for the HTTP port of **ubkg-front-end** must be the same as the port used in the
-   **SERVER_URL** environment variable in the **ubkg-swagger** component--e.g.,
-   `SERVER_URL: http://localhost:7070/api `
 
+The number for the HTTP port of **ubkg-front-end** must be the same as the port used in the
+**SERVER_URL** environment variable in the **ubkg-swagger** component--e.g., if 
+the HTTP port is `7070:8080`, then `SERVER_URL: http://localhost:7070/api `.
 
-###### ubkg-swagger and swagger-initializer.js
-Unlike the other UBKGBox services, **ubkg-swagger** uses the official Swagger UI Docker image (_swaggerapi/swagger-ui_).
-No Dockerfile is needed: all information is in **ubkgbox-docker-compose.yml**.
-
-Linking the Swagger UI instance in **ubkg-swagger** to the ubkg-api instance in the **ubkg-api** service
-requires that the file **swagger-initialize.js** be located in the same directory as **ubkgbox-docker-compose.yml**.
-The url in **swagger-initialize.js** should point to the raw location of the OpenAPI specification file in the ubkg-api repo
-for the ubkgbox implementation.
 
 ### Compose the application
 
@@ -253,11 +249,16 @@ directory name is consistent with the external volume mounted by the turkey Dock
 
 # Swagger customization
 
-To integrate a Swagger UI container into **UBKGBox**, the base Docker image is
-customized to allow the Swagger UI to load its YAML file and server URL based on 
+###### ubkg-swagger and swagger-initializer.js
+Unlike the other UBKGBox services, **ubkg-swagger** uses the official Swagger UI Docker image (_swaggerapi/swagger-ui_).
+No Dockerfile is needed: all information is in **ubkgbox-docker-compose.yml**.
+
+Linking the Swagger UI instance in **ubkg-swagger** to the ubkg-api instance in the **ubkg-api** service
+requires that the base Swagger UI Docker image be customized to allow it to load its YAML file and set its server URL based on 
 the environment variables SWAGGER_YAML_URL and SERVER_URL in the Docker compose file.
 
 The SWAGGER_YAML_URL environment variable should point to the **ubkg-api-ubkgbox-spec.yaml** file in the **ubkg-api** GitHub repository.
+The port number in the SERVER_URL environment variable should be the HTTP port set for the **UBKGBox** front end.
 
 1. The base Swagger UI **index.html** is enhanced to load the scripts **swagger-initializer.js**, **js-yaml.min.js**, and **swagger-server-url.js** before running Swagger UI.
 2. A custom **swagger-server-url.js** attaches runtime values to the window object.
