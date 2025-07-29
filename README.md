@@ -93,7 +93,7 @@ After building the turnkey distribution,
      - **build_ubkgbox_distribution_zip.sh**
    - If necessary, set permissions on the scripts with the command `chmod +x`. 
    - Copy **ubkgbox-docker-compose.yml** to the build directory.
-   - Copy **swagger-initializer.js** to the build container.
+   - Copy the **swagger** folder to the build directory.
 
 ###### from the ubkg-api repository
 The **api** service hosts an instance of ubkg-api that
@@ -144,11 +144,26 @@ The configuration file for the **auth** container (**ubkg-auth-app.cfg**) curren
 only the URL base for the UMLS API, which is also in **ubkg-auth-app.cfg.example**.
 
 ###### ubkg-docker-compose.yml
-The only items in **ubkg-docker-compose.yml** that can be changed without significant consequence are the values of **container_name**--i.e.,
-the custom names for the containers. 
 
-The value of **container_name** for the **ubkg-back-end** service must match the value used in the 
-**SERVER** key of the ubkg-api instance's **app.cfg**.
+The configurable items in the Docker compose file are:
+
+1. Values of **container_name**--i.e., the custom names for the containers. 
+   The value of **container_name** for the **ubkg-back-end** service must match the value used in the 
+   **SERVER** key of the ubkg-api instance's **app.cfg**.
+
+2. The HTTP port for the **UBKGBox** front end.
+   ```commandline
+     ubkg-front-end:
+        container_name: front-end
+        image: hubmap/ubkg-front-end:latest
+        ports:
+            - "7070:8080"   # HTTP
+            - "7071:7071"   # Bolt via stream.
+   ```
+   The number for the HTTP port of **ubkg-front-end** must be the same as the port used in the
+   **SERVER_URL** environment variable in the **ubkg-swagger** component--e.g.,
+   `SERVER_URL: http://localhost:7070/api `
+
 
 ###### ubkg-swagger and swagger-initializer.js
 Unlike the other UBKGBox services, **ubkg-swagger** uses the official Swagger UI Docker image (_swaggerapi/swagger-ui_).
