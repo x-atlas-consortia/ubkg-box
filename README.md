@@ -251,4 +251,18 @@ directory name is consistent with the external volume mounted by the turkey Dock
 | Guesdt    | log               | nginx_access-guesdt.log         | HTTP calls made to the Guesdt application     |
 |           |                   | nginx_error-guesdt.log          | errors from the front end related to Guesdt   |
 
+# Swagger customization
+
+To integrate a Swagger UI container into **UBKGBox**, the base Docker image is
+customized to allow the Swagger UI to load its YAML file and server URL based on 
+the environment variables SWAGGER_YAML_URL and SERVER_URL in the Docker compose file.
+
+The SWAGGER_YAML_URL environment variable should point to the **ubkg-api-ubkgbox-spec.yaml** file in the **ubkg-api** GitHub repository.
+
+1. The base Swagger UI **index.html** is enhanced to load the scripts **swagger-initializer.js**, **js-yaml.min.js**, and **swagger-server-url.js** before running Swagger UI.
+2. A custom **swagger-server-url.js** attaches runtime values to the window object.
+3. A custom **swagger-initializer.js** uses the values set by **swagger-server-url** to configure Swagger UI’s server URL.
+4. A custom **entrypoint.sh** script substitutes runtime values for placeholder URLS in the **swagger-server-url** file, by means of a template file.
+
+The custom files are mounted as volumes in the Docker Compose YAML file.
 
