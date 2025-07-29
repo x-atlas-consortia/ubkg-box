@@ -164,10 +164,12 @@ Change only the first number in the **ports** assignments.
             - "7070:8080"   # HTTP
             - "7071:7071"   # Bolt via stream.
    ```
+Notes:
 
-The number for the HTTP port of **ubkg-front-end** must be the same as the port used in the
-**SERVER_URL** environment variable in the **ubkg-swagger** component--e.g., if 
-the HTTP port is `7070:8080`, then `SERVER_URL: http://localhost:7070/api `.
+   + The number for the HTTP port of **ubkg-front-end** must be the same as the port used in the
+     **SERVER_URL** environment variable in the **ubkg-swagger** component--e.g., if 
+     the HTTP port is `7070:8080`, then `SERVER_URL: http://localhost:7070/api `.
+   + The number for the Bolt port should be repeated in the **BOLT_PORT** environment variable, so that the **UBKGBox** hoome page's instructions for launching the neo4j Browser will show the correct port number.
 
 
 ### Compose the application

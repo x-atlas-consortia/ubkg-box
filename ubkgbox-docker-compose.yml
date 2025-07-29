@@ -26,6 +26,8 @@ services:
       - "./log_ubkgbox:/usr/src/app/log"
 
     environment:
+      - BOLT_PORT=7071 # must match the external Bolt port
+
       # neo4j browser port for the ubkg-back-end service.
       - UI_PORT
       # UID and GID 1001 to match the ubkg user by default.
