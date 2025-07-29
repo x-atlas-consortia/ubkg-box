@@ -144,5 +144,30 @@ as illustrated below.
 Because Guesdt is a client of the UBKG API component, the intial load of Guesdt may be incomplete because of API failure. 
 If the initial load of Guesdt is incomplete, refresh the page.
 
-
 ![img_4.png](img_4.png)
+
+# Changing UBKGBox defaults
+
+All of the changes described below will require rebuilding **UBKGBox** by running the **build_ubkgbox.sh** script.
+
+## Changing the neo4j account password
+To change the password for the **neo4j** account in the UBKG neo4j instance hosted by the back end, 
+edit **container.cfg** and change the value of _neo4j_password_.
+
+## Changing container display names
+To change the names of the Docker containers for the components of **UBKGBox**, edit **ubkgbox-docker-compose.yml**.
+Change only the **container_name** attribute of a container.
+
+## Changing the HTTP port 
+By default, the **UBKGBox** front-end and Swagger components are mapped to port 9100.
+Changing this port requires two edits in **ubkgbox-docker-compose.yml**:
+
+1. In the **ubkg-front-end** block, change the port mapped to port 8080.
+2. In the **ubkg-swagger** block, change the port number in the **SERVER_URL** environment variable.
+
+## Changing the Bolt port
+By default, the **UBKGBox** front-end and back-end components are mapped to port 9101 for traffic using the Bolt protocol.
+Changing this port requires two edits in the **ubkg-front-end** block of **ubkgbox-docker-compose.yml**:
+
+1. Change the port mapped to port 7100.
+2. Change the value of the environment variable BOLT_PORT.
