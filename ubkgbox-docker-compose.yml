@@ -10,8 +10,8 @@ services:
     container_name: front-end
     image: hubmap/ubkg-front-end:latest
     ports:
-      - "9000:8080"   # HTTP
-      - "9100:7071"   # Bolt via stream.
+      - "9100:8080"   # HTTP
+      - "9101:7071"   # Bolt via stream
 
     # Wait until the neo4j server in ubkg-back-end is running.
     depends_on:
@@ -26,10 +26,8 @@ services:
       - "./log_ubkgbox:/usr/src/app/log"
 
     environment:
-      - BOLT_PORT=9100 # must match the external Bolt port
-
-      # neo4j browser port for the ubkg-back-end service.
-      - UI_PORT
+      - BOLT_PORT=9101 # must match the external Bolt port
+      
       # UID and GID 1001 to match the ubkg user by default.
       # These environment variables will be passed to the Dockerfile and used to configure the non-root
       # user under which nginx will run.
@@ -146,21 +144,20 @@ services:
     environment:
       # Used to point to the ubkg-api service and its Swagger specification in GitHub.
       SWAGGER_YAML_URL: https://raw.githubusercontent.com/x-atlas-consortia/ubkg-api/jas_ubkgbox/ubkg-api-ubkgbox-spec.yaml
-      SERVER_URL: http://localhost:9000/api          # The port should match the exposed port for the ubkg-front-end service
+      SERVER_URL: http://localhost:9100/api          # This should match the exposed port for the ubkg-front-end service
+
 
     volumes:
-      # Volumes are mounted before entrypoint.sh executes.
-      # Custom Swagger UI index with references to swagger-initializer.js and swagger-server-url.js.template.
+      # Custom Swagger UI index with references to swagger-initializer.js and swagger-server-url.js scripts.
       - ./swagger/index.html:/usr/share/nginx/html/index.html
       # Custom Swagger initialization file that loads the Swagger specification for ubkg-api from GitHub.
       - ./swagger/swagger-initializer.js:/usr/share/nginx/html/swagger-initializer.js
-      - # Swagger JS template of placeholder URLs for Swagger YAML and URL
-      - ./swagger/swagger-server-url.js.template:/usr/share/nginx/html/swagger-server-url.js.template
-      # Entrypoint that replaces placeholder URLs in swagger-server-url.js.template with environment variables.
+      # Entrypoint that replaces placeholders in swagger-server-url.js with environment variables.
       - ./swagger/entrypoint.sh:/usr/share/nginx/html/entrypoint.sh
-
+      # Swagger JS of placeholders.
+      - ./swagger/swagger-server-url.js.template:/usr/share/nginx/html/swagger-server-url.js.template
+      
     entrypoint:
-      # Passes environment variables SWAGGER_YAML_URL and SERVER_URL to container to allow configuration of port for Swagger
       - /usr/share/nginx/html/entrypoint.sh
 
     expose:
@@ -172,6 +169,7 @@ services:
 
     networks:
       - ubkg_net
+  
 
   ############
   # ubkg-back-end is based on a local turnkey distribution of a Docker neo4j container. 
