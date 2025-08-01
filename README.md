@@ -194,8 +194,8 @@ When **build_ubkb_box.sh** executes, the Container view of Docker Desktop will s
   - _swagger_
 
 The **ubkg-front-end** container is the only container in **UBKGBox** that will have external ports:
-- 7000 for the **UBKGBox** home page
-- 7001 to map to the internal bolt port of the neo4j server hosted in **ubkg-back-end**.
+- 8080 for the **UBKGBox** home page
+- 7071 to map to the internal bolt port of the neo4j server hosted in **ubkg-back-end**.
 
 ### Build the distribution Zip
 Execute `./build_ubkgbox_distribution_zip.sh`.

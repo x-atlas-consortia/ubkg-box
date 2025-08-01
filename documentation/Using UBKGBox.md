@@ -125,10 +125,10 @@ Box** back end component.
 
 1. The **Launch neo4j Browser** button opens the neo4j browser in another tab.
 2. Because the neo4j Browser does not currently support Single Sign On with the **UBKGBox** reverse proxy, you will need to provide connection information to the login:
-   - **ConnectURL**: neo4j://neo4j.ubkg.com:7001
+   - **ConnectURL**: neo4j://localhost:_PORT_, where _PORT_ is the port number for the Bolt port specified in **ubkgbox-docker-compose.yml**. (The UBKGBox home page provides the value of **ConnectURL**.)
    - **Username**: neo4j
    - **Password**: the password for the UBKG instance. The default password is **abcd1234**; if the password was changed, it will be in the file named **app.cfg** in the subdirectory _api_config_ of the application directory.
-3. Once you connect to the UBKG instance, the neo4j browser may populate the **ConnectURL** on subsequent loads of the browser.
+3. Once you connect to the UBKG instance, the neo4j browser caches the **ConnectURL** for subsequent loads of the browser.
 ![img_3.png](img_3.png)
 
 ### Guesdt (Graphing UMLS Enables Search in Dynamic Trees)
