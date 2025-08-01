@@ -88,8 +88,7 @@ After building the turnkey distribution,
 #### Add files to the build directory path
 ###### from the ubkg-box repository
    - Copy the following scripts to the build directory:
-     - **build_ubkgbox.sh** 
-     - **add_subnodes_to_host.sh**
+     - **build_ubkgbox.sh**
      - **build_ubkgbox_distribution_zip.sh**
    - If necessary, set permissions on the scripts with the command `chmod +x`. 
    - Copy **ubkgbox-docker-compose.yml** to the build directory.
@@ -176,7 +175,6 @@ Notes:
 
 From a Terminal session, execute `./build_ubkgbox.sh`. 
 The **build_ubkgbox.sh** script will:
-   - add a subnode to the local hosts file named **neo4j.ubkgbox.com**, mapped to the localhost/loopback IP.
    - validate and obtain information from **container.cfg**.
    - execute Docker Compose on **ubkg-box-docker-compose.yml**.
 
@@ -213,17 +211,6 @@ The script will:
    - Upload the Zip file to the folder in the designated Globus collection.
    - Update the **file_descriptions.json** file in the folder to reflect the new distribution.
 
-# UBKGBOX subnodes
-
-**UBKGBox** defines a network subnode named _neo4j.ubkg.com_ to support reverse proxying to the neo4j browser
-application hosted in the **ubkg-back-end** service.
-
-The UBKG build script (**build_ubkgbox.sh**) calls the script **add_subnodes_to_host.sh** to add subnodes to the host.
-
-By default, _neo4j.ubkgbox.com_ maps to the localhost/loopback IP on the local machine (127.0.0.1).
-
-Because modifying the hosts file requires administrative privileges, the **add_subnodes_to_host** script
-will ask for an administrative password.
 
 ---
 

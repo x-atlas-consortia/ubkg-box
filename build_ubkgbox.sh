@@ -27,11 +27,11 @@ echo "UBKGBox build script"
 echo "****************************************"
 
 # Add a subnode named neo4j.ubkgbox.com to the hosts file.
-./add_subnodes_to_host.sh
-if [ $? -ne 0 ]; then
-    echo "Exiting."
-    exit 1
-fi
+#./add_subnodes_to_host.sh
+#if [ $? -ne 0 ]; then
+    #echo "Exiting."
+    #exit 1
+#fi
 
 
 
