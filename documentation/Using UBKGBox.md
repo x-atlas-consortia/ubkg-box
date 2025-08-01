@@ -50,7 +50,6 @@ Follow the instructions on the site to download a distribution.
    - HuBMAP/SenNet: 9GB
    - Data Distillery: 20GB
 2. The host machine should have at least 16 GB of RAM.
-3. The **UBKGBox** build script must create a network subnode (currently, just the subnode _neo4j.ubkgbox.com_) that maps to the localhost/loopback IP (172.0.0.1). This requires that the user who runs the build script be able to run _sudo_.
 
 ## Build script
 1. Unzip the distribution archive zip obtained from the UBKG Download site.
