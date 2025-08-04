@@ -97,4 +97,4 @@ export UI_PORT="$ui_port"
 export BOLT_PORT="$bolt_port"
 
 # Call Docker compose for ubkgbox.
-docker compose -f ubkgbox-docker-compose.yml -p ubkgbox up
+docker compose -f ubkgbox-docker-compose.yml -p ubkgbox up --pull always
