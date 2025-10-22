@@ -12,12 +12,13 @@ This repository describes **UBKGBox**: a self-contained, multi-component UBKG ap
 - UBKG client services that work with the neo4j instance hosted in the back end service, including:
   - an **API** service  
   - a **guesdt** service that hosts an instance of the **Guesdt** client that executes endpoints of the API service
+- a "sidecar" logrotation service for managing service logging
  
 
 ---
 # UBKGBox Architecture
 
-![img_1.png](img_1.png)
+![img_2.png](img_2.png)
 
 The **UBKGBox** application comprises:
 - a Docker Compose file (**ubkgbox-docker-compose.yml**)
@@ -38,6 +39,7 @@ GitHub repositories, with images published in Docker Hub:
 | front end     | reverse proxy and UI host                                        | ubkg-front-end | front-end                     | [ubkg-front-end](https://github.com/x-atlas-consortia/ubkg-front-end) |
 | guesdt        | hosts an Guesdt instance that executes endpoints of the UBKG API | ubkg-guesdt    | guesdt                        | [Guesdt](https://github.com/x-atlas-consortia/Guesdt)                 |
 | swagger       | Swagger UI instance that executes endpoints of the UBKG API      | ubkg-swagger   | swagger                       | none                                                                  |
+|logrotate|"sidecar" logrotate service to manage container logging|ubkg-box-logrotate|
 
 
 ---
@@ -60,13 +62,14 @@ image, mounted to an external volume that contains a UBKG context created by the
 ### Validate Docker Hub containers
 **UBKGBox** assumes the existence of the following public Docker images in Docker Hub:
 
-| Component     | Image tag                                                                                     |
-|---------------|-----------------------------------------------------------------------------------------------|
-| front end     | [hubmap/ubkg-front-end:latest](https://hub.docker.com/r/hubmap/ubkg-front-end/tags)           |
-| authorization | [hubmap/ubkg-auth:latest](https://hub.docker.com/r/hubmap/ubkg-auth/tags)                     |
-| api           | [hubmap/ubkg-api:latest](https://hub.docker.com/r/hubmap/ubkg-api/tags)                       |
-| back end      | [hubmap/ubkg-neo4j:current-release](https://hub.docker.com/r/hubmap/ubkg-neo4j)               |
-| guesdt        | [hubmap/ubkg-guesdt:latest](https://hub.docker.com/repository/docker/hubmap/ubkg-guesdt/tags) |
+| Component     | Image tag                                                                                                    |
+|---------------|--------------------------------------------------------------------------------------------------------------|
+| front end     | [hubmap/ubkg-front-end:latest](https://hub.docker.com/r/hubmap/ubkg-front-end/tags)                          |
+| authorization | [hubmap/ubkg-auth:latest](https://hub.docker.com/r/hubmap/ubkg-auth/tags)                                    |
+| api           | [hubmap/ubkg-api:latest](https://hub.docker.com/r/hubmap/ubkg-api/tags)                                      |
+| back end      | [hubmap/ubkg-neo4j:current-release](https://hub.docker.com/r/hubmap/ubkg-neo4j)                              |
+| guesdt        | [hubmap/ubkg-guesdt:latest](https://hub.docker.com/repository/docker/hubmap/ubkg-guesdt/tags)                |
+| logrotate     | [hubmap/ubkg-box-logrotate:latest](https://hub.docker.com/repository/docker/hubmap/ubkg-box-logrotate/tags)) |
 
 To build and publish new versions of the image for a particular component, 
 consult the corresponding GitHub repository for instructions.
@@ -235,6 +238,8 @@ directory name is consistent with the external volume mounted by the turkey Dock
 |           |                   | nginx_error_ubkg-auth.log       | errors from the Web host of the ubkg-auth API |
 | Guesdt    | log               | nginx_access-guesdt.log         | HTTP calls made to the Guesdt application     |
 |           |                   | nginx_error-guesdt.log          | errors from the front end related to Guesdt   |
+
+The ubkg-box-logrotate container manages log rotation by means of its **ubkg.logrotate** configuration file.
 
 # Swagger customization
 
