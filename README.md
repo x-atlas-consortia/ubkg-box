@@ -53,6 +53,10 @@ The **UBKGBox** build process expands on the build process used to build a [turn
 In particular, the **back-end** service of the **UBKGBox** application is a Docker container based on a ubkg-neo4j
 image, mounted to an external volume that contains a UBKG context created by the turnkey workflow.
 
+# Stop the turnkey container
+Because the UBKGBox instance will use the same neo4j database as the turnkey instance, stop the turnkey container before 
+running the UBKGBox build script.
+
 ### Supported platforms
 
 **UBKGBox** bash shell scripts contained are intended for use on Mac OS X or Linux. 
@@ -195,6 +199,7 @@ When **build_ubkb_box.sh** executes, the Container view of Docker Desktop will s
   - _auth_
   - _Guesdt_
   - _swagger_
+  - _logrotate_
 
 The **ubkg-front-end** container is the only container in **UBKGBox** that will have external ports:
 - 8080 for the **UBKGBox** home page

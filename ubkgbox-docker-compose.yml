@@ -207,6 +207,21 @@ services:
     networks:
       - ubkg_net
 
+  ############
+  # Sidecar: logrotate centralizes rotation of host-mounted logs for application containers and neo4j
+
+  ubkg-box-logrotate:
+    image: hubmap/ubkg-box-logrotate:latest
+    container_name: ubkg-box-logrotate
+    environment:
+      - LOGROTATE_SCHEDULE=${LOGROTATE_SCHEDULE:-"0 2 * * *"}
+    volumes:
+      - "./log_ubkgbox:/var/log/ubkgbox"
+      - "./logs:/var/log/neo4j"
+      - "./logrotate_state:/var/lib/logrotate"
+    restart: unless-stopped
+    networks:
+      - ubkg_net
 
 networks:
 
