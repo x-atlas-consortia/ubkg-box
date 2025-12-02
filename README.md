@@ -100,6 +100,7 @@ After building the turnkey distribution,
    - If necessary, set permissions on the scripts with the command `chmod +x`. 
    - Copy **ubkgbox-docker-compose.yml** to the build directory.
    - Copy the **swagger** folder to the build directory.
+   - Set permissions on the **entrypoint.sh** script with the command `chmod +x`.
 
 ###### from the ubkg-api repository
 The **api** service hosts an instance of ubkg-api that
